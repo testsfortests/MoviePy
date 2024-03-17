@@ -1,5 +1,4 @@
 from moviepy.editor import *
-from io import BytesIO
 import requests
 import tempfile
 
@@ -34,23 +33,10 @@ def create_final_video():
 
     print("writing started...")
 
-    # Create a temporary file-like object
-    with tempfile.NamedTemporaryFile(suffix='.mp4') as temp_file:
-        # Write the video file to the temporary file
-        final_clip.write_videofile(temp_file.name, codec='libx264', fps=24)
+    final_clip.write_videofile(output_path, codec='libx264', fps=24)
 
-        # Prepare the files dictionary with the temporary file
-        files = {'video': open(temp_file.name, 'rb')}
-
-        # Send the video file to the Telegram endpoint
-        response = requests.post(TELE_ENDPOINT_URL, file=files)
-
-        # Check the response status
-        if response.status_code == 200:
-            print("Video file sent successfully to the Telegram endpoint")
-        else:
-            print("Error sending video file:", response.text)
-
+    print("Video file sent successfully to the Telegram endpoint")
+    
 # Example usage:
 
 # create_final_video()
